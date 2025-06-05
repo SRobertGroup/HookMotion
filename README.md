@@ -1,40 +1,31 @@
-[![DOI](https://zenodo.org/badge/971190779.svg)](https://doi.org/10.5281/zenodo.15309368) [![Launch App](https://img.shields.io/badge/Launch%20App-Shiny-blue?logo=R)](https://anatomeshr.serve.scilifelab.se/)
 
-# Anatomeshr
+# HookMotion
 
-> _A converter of 2D plant anatomical data into finite element mesh (GEO) format_
+> _Apical hook kinetics analyzer from DLhook data_
 
 **Lead development:**  Adrien Heymans
 
-**Contributors:** Ioannis Theodorou, Grégoire Loupit, Vinod Kumar, Gonzalo Revilla, Olivier Ali, Stéphanie Robert, Stéphane Verger
+**Coordination:** Stéphanie Robert, Sara Raggi
 
 ---
 
 ## 1. About
 
-[**Anatomeshr**](https://anatomeshr.serve.scilifelab.se/) is a user-friendly **Shiny app** that converts 2D plant tissue image data into **finite element-compatible meshes** for biomechanical simulations.
+[**HookMotion**](https://hookmotion.serve.scilifelab.se/) is a user-friendly **Shiny app** that analize angle kinetic data from [**DLhook**](https://github:com/SRobertGroup/DLhook/) software.
 
-This tool bridges high-resolution anatomical imaging (CellSeT, ImageJ) and simulation frameworks like [**BVPy**](https://mosaic.gitlabpages.inria.fr/bvpy/), providing:
+Understanding plant growth requires precise phenotyping of early developmental events. One critical stage is the **apical hook**, a structure that forms after germination to protect the shoot meristem during soil emergence. This process unfolds in three phases: **formation**, **maintenance**, and **opening**.
 
-- Input support for:
-  - `CellSeT` or [`GRANAR`](https://granar.github.io/) `.xml` files
-  - `ImageJ` `.roi` files (single cells)
-  - Predefined anatomical templates
-- Output: `.geo` files with:
-  - Customizable wall thickness
-  - Adjustable vertex smoothing
-  - Cell Tags to easily mark boundary conditions 
-- Seamless integration with finite element software (e.g., Fenics/BVPy)
+This application helps quantify and visualize these dynamics based on angle measurements extracted from image files.
 
-[**Start the Shiny app**](https://anatomeshr.serve.scilifelab.se/)
+---
 
 ## 2. Installation
 
 ### Clone the repository
 
 ```bash
-git clone https://github.com/SRobertGroup/Anatomeshr.git
-cd Anatomeshr
+git clone https://github.com/SRobertGroup/HookMotion.git
+cd HookMotion
 ```
 
 ### R Dependencies
@@ -42,8 +33,7 @@ cd Anatomeshr
 Ensure you're using **R 4.3+**, then install required packages:
 
 ```r
-install.packages(c("sf", "units", "xml2", "tidyverse", "viridis",
-                   "smoothr", "RImageJROI", "utils", "codetools", "purrr"),
+install.packages(c("ggplot2", "dplyr", "tidyr", "readr", "svglite"),
                  dependencies = TRUE)
 ```
 
@@ -52,13 +42,13 @@ install.packages(c("sf", "units", "xml2", "tidyverse", "viridis",
 To run with Docker (recommended):
 
 ```bash
-docker pull heymansadrien/anatomeshr:0.0.6
+docker pull heymansadrien/hookmotion:0.1.5
 ```
 
 Then launch it:
 
 ```bash
-docker run -p 3838:3838 heymansadrien/anatomeshr:0.0.6
+docker run -p 3838:3838 heymansadrien/hookmotion:0.1.5
 ```
 
 App will be available at: [http://localhost:3838](http://localhost:3838)
@@ -67,42 +57,42 @@ App will be available at: [http://localhost:3838](http://localhost:3838)
 
 ### Step 1: Upload Data
 
-Choose one of the input types:
+Upload one or more .csv files containing apical hook angle data.
 
-- 📂 **CellSet XML:** `.xml` exported from [CellSet](https://www.cellset.org/) or GRANAR  
-- 📂 **ImageJ ROIs:** One or more `.roi` files (drawn manually in ImageJ/Fiji)
-- 📂 **preloaded anatomies** from literature
+The structure of each CSV should be:
 
-### Step 2: Prepare Geometry
+```{csv}
+ img_name,1,2,3,...
+ Col0_010.tif,-10,-5,4,...
+ Col0_015.tif,8,-2,6,...
+```
 
-Customize geometry generation:
+### Step 2: Set Time Points
 
-- Adjust **cell wall thickness**
-- Tweak **corner smoothing** for more realistic cell shapes
+You have two options:
+- Automatic: Check the box to extract time from image filenames (recommended).
+- Manual: Uncheck and input a comma-separated list of time points matching your images.
 
-### Step 3: Export Mesh
-
-Export your mesh as:
-
-- `plot.png`, `plot.svg` — anatomical visualization
-- `geometry.csv` — tabular coordinate of the geo data
-- `geometry.geo` — mesh input file for finite element analysis through [GMSH](https://gmsh.info/) 
-
-
-> ⚠️ **Tips & Warnings**
+> 📂 File Naming Best Practices
 >
-> - Concave cells in `.xml` input can cause meshing errors
-> - When using `.roi` input, consider increasing wall thickness to improve polygon closure
-> - Use higher smoothing values to improve mesh quality in large or irregular cells
-
+> To ensure automatic time detection works properly, name your image files using the pattern:
+```{}
+GENOTYPE_TIME.tif
+```
+For example:
+```{}
+Col0_010.tif
+Col0_015.tif
+Col0_020.tif
+```
 
 ## 4. Citation
 
-> Please cite this repository if you use **Anatomeshr** in your work.  
+> Please cite DLhook this repository if you use **HookMotion** in your work.  
 > A manuscript describing the method is currently in preparation.
 
 ---
 
 ## Acknowledgments
 
-Anatomeshr was developed by members of the [**Stéphanie Robert Group**](https://srobertgroup.com/) and [**Stéphane Verger Group**](https://www.upsc.se/researchers/6177-verger-stephane-mechanics-and-dynamics-of-cell-to-cell-adhesion-in-plants.html), in collaboration with plant mechanobiology researchers.
+DLhook and HookMotion were developed by members of the [**Stéphanie Robert Group**](https://srobertgroup.com/).
