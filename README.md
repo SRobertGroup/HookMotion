@@ -11,7 +11,7 @@
 
 ## 1. About
 
-[**HookMotion**](https://hookmotion.serve.scilifelab.se/) is a user-friendly **Shiny app** that analize angle kinetic data from [**DLhook**](https://github:com/SRobertGroup/DLhook/) software.
+[**HookMotion**](https://hookmotion.serve.scilifelab.se/) is a user-friendly **Shiny app** that analize angle kinetic data from [**DLhook**](https://github.com/SRobertGroup/DLhook/) software.
 
 Understanding plant growth requires precise phenotyping of early developmental events. One critical stage is the **apical hook**, a structure that forms after germination to protect the shoot meristem during soil emergence. This process unfolds in three phases: **formation**, **maintenance**, and **opening**.
 
