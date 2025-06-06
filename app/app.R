@@ -164,6 +164,7 @@ server <- function(input, output) {
     full_data <- bind_rows(data_list)
     
     summary_data <- full_data |>
+      filter(angle != 0) |>
       group_by(file, time) |>
       summarise(
         mean_angle = mean(angle, na.rm = TRUE),
@@ -210,7 +211,7 @@ server <- function(input, output) {
         ) +
         theme_classic()
       
-      ggsave(file, plot = pl, width = 8, height = 8, dpi = 100)
+      ggsave(file, plot = pl, width = 12, height = 8, dpi = 100)
     }
   )
   
@@ -231,7 +232,7 @@ server <- function(input, output) {
         ) +
         theme_classic()
       
-      ggsave(file, plot = pl, width = 8, height = 8, dpi = 100)
+      ggsave(file, plot = pl, width = 12, height = 8, dpi = 100)
     }
   )
 }

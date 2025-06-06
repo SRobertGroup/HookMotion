@@ -19,15 +19,12 @@ RUN apt-get update && apt-get install -y \
 # Create working directory
 WORKDIR /srv/shiny-server/
 
-RUN rm -rf /srv/shiny-server/*
-
 # Install the required packages
 RUN Rscript -e 'install.packages(c("ggplot2", "dplyr", "tidyr", "readr", "svglite"), dependencies = TRUE)'
 
-# Copy app code
-COPY ./app/app.R /srv/shiny-server/app.R
-COPY ./app/www/* /srv/shiny-server/www/
-
+# Copy the app files (scripts, data, etc.)
+RUN rm -rf /srv/shiny-server/*
+COPY /app/ /srv/shiny-server/
 
 # Ensure that the expected user is present in the container
 RUN if id shiny &>/dev/null && [ "$(id -u shiny)" -ne 999 ]; then \
@@ -39,8 +36,6 @@ RUN if id shiny &>/dev/null && [ "$(id -u shiny)" -ne 999 ]; then \
 
 # Other settings
 USER shiny
-# Open ports (Shiny default)
 EXPOSE 3838
 
-# Startup command
-CMD ["shiny-server"]
+CMD ["/usr/bin/shiny-server"]
